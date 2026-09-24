@@ -1,0 +1,14 @@
+{
+  "name": "genba-calendar",
+  "version": "1.0.0",
+  "description": "電気工事チーム向け 音声で予定を入れて共有できるカレンダー",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

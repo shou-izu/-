@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1f3a5f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="現場カレンダー">
+  <title>現場カレンダー</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ログイン -->
+<section id="login" class="screen hidden">
+  <div class="login-box">
+    <div class="logo">⚡</div>
+    <h1>現場カレンダー</h1>
+    <label>チームの合言葉
+      <input id="login-pass" type="password" inputmode="text" autocomplete="current-password">
+    </label>
+    <button id="login-btn" class="btn primary big">はじめる</button>
+    <p id="login-err" class="err"></p>
+  </div>
+</section>
+
+<!-- 自分の名前を選ぶ -->
+<section id="whoami" class="screen hidden">
+  <div class="login-box">
+    <h1>あなたはだれ？</h1>
+    <div id="whoami-list" class="who-list"></div>
+    <div class="row">
+      <input id="whoami-new" placeholder="名前を追加（例：田中）">
+      <button id="whoami-add" class="btn">追加</button>
+    </div>
+  </div>
+</section>
+
+<!-- メイン -->
+<section id="main" class="screen hidden">
+  <header class="top">
+    <button id="me-btn" class="me"></button>
+    <div id="sync-state" class="sync"></div>
+  </header>
+
+  <!-- 予定タブ -->
+  <div id="tab-cal" class="tab">
+    <div class="month-head">
+      <button class="icon-btn" id="prev-month">‹</button>
+      <button id="month-title" class="month-title"></button>
+      <button class="icon-btn" id="next-month">›</button>
+    </div>
+    <div class="dow"><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span class="sat">土</span><span class="sun">日</span></div>
+    <div id="month-grid" class="month-grid"></div>
+    <div id="member-filter" class="chips"></div>
+    <h2 id="day-title" class="day-title"></h2>
+    <div id="day-list" class="list"></div>
+  </div>
+
+  <!-- 要確認タブ -->
+  <div id="tab-check" class="tab hidden">
+    <h2 class="section-title">要確認 <small>予定のもれを防ぐ</small></h2>
+    <div id="check-list"></div>
+  </div>
+
+  <!-- 設定タブ -->
+  <div id="tab-settings" class="tab hidden">
+    <h2 class="section-title">メンバー</h2>
+    <div id="member-edit"></div>
+    <div class="row">
+      <input id="member-new" placeholder="名前を追加">
+      <button id="member-add" class="btn">追加</button>
+    </div>
+    <h2 class="section-title">音声入力のコツ</h2>
+    <div class="tips">
+      <p>マイクを押して、ふだん電話メモを書くように話すだけです。</p>
+      <p class="ex">「明日の10時、山本建設さんから、駅前ビルの照明交換、佐藤さん」</p>
+      <p class="ex">「来週月曜の朝一、中村様邸、分電盤交換」</p>
+      <p class="ex">「佐々木さんから電話、ブレーカーが落ちる、折り返し」<br><small>→ 日時がない予定は「要確認」に入ります</small></p>
+      <p>日付：今日／明日／あさって／金曜／来週水曜／10月3日／25日<br>
+         時間：10時／3時半（1〜6時は午後あつかい）／午前中／朝一<br>
+         担当：メンバーの名前・「全員」</p>
+    </div>
+    <h2 class="section-title">その他</h2>
+    <button id="change-me" class="btn">自分の名前を変える</button>
+  </div>
+
+  <nav class="bottom">
+    <button data-tab="cal" class="active"><span>📅</span>予定</button>
+    <button id="mic-fab" class="mic-fab" aria-label="音声で予定を追加">🎤</button>
+    <button data-tab="check"><span>⚠️</span>要確認<b id="check-badge" class="badge hidden"></b></button>
+    <button data-tab="settings"><span>⚙️</span>設定</button>
+  </nav>
+  <button id="add-fab" class="add-fab" aria-label="手で入力">＋</button>
+</section>
+
+<!-- 音声入力 -->
+<div id="voice" class="overlay hidden">
+  <div class="voice-box">
+    <div id="voice-status" class="voice-status">話してください</div>
+    <div id="voice-wave" class="wave"><i></i><i></i><i></i><i></i><i></i></div>
+    <textarea id="voice-text" rows="4" placeholder="ここに文字が出ます。キーボードのマイクで話してもOK"></textarea>
+    <div id="voice-preview" class="preview"></div>
+    <div class="voice-actions">
+      <button id="voice-cancel" class="btn">やめる</button>
+      <button id="voice-retry" class="btn">もう一度</button>
+      <button id="voice-save" class="btn primary">登録</button>
+    </div>
+  </div>
+</div>
+
+<!-- 予定の詳細・編集 -->
+<div id="sheet" class="overlay hidden">
+  <div class="sheet">
+    <div class="sheet-head">
+      <button id="sheet-close" class="icon-btn">✕</button>
+      <b id="sheet-title">予定</b>
+      <button id="sheet-save" class="btn primary">保存</button>
+    </div>
+    <div class="sheet-body">
+      <label>内容<input id="f-title"></label>
+      <div class="row">
+        <label>日付<input id="f-date" type="date"></label>
+        <label>開始<input id="f-time" type="time"></label>
+        <label>終了<input id="f-end" type="time"></label>
+      </div>
+      <label>時間メモ<input id="f-note" placeholder="午前中・朝一など"></label>
+      <label>取引先<input id="f-client" list="client-options"></label>
+      <datalist id="client-options"></datalist>
+      <label>現場・住所<input id="f-place"></label>
+      <label>電話番号<input id="f-phone" type="tel"></label>
+      <div class="field-label">担当</div>
+      <div id="f-assignees" class="chips"></div>
+      <label>メモ<textarea id="f-memo" rows="2"></textarea></label>
+      <p id="f-raw" class="raw"></p>
+
+      <div id="report-box" class="report-box">
+        <h3>施工報告</h3>
+        <div id="photo-grid" class="photo-grid"></div>
+        <div class="row">
+          <label class="btn photo-btn">📷 写真を撮る<input id="photo-cam" type="file" accept="image/*" capture="environment" hidden></label>
+          <label class="btn photo-btn">🖼 アルバムから<input id="photo-lib" type="file" accept="image/*" multiple hidden></label>
+        </div>
+        <label>報告コメント
+          <div class="row">
+            <textarea id="f-report" rows="2" placeholder="作業内容・残りの作業など"></textarea>
+            <button id="report-mic" class="icon-btn" title="声で入力">🎤</button>
+          </div>
+        </label>
+        <button id="done-btn" class="btn done big">✓ 完了にする</button>
+      </div>
+      <p id="f-meta" class="meta"></p>
+      <button id="delete-btn" class="btn danger">この予定を削除</button>
+    </div>
+  </div>
+</div>
+
+<div id="viewer" class="overlay viewer hidden"><img id="viewer-img" alt=""></div>
+<div id="toast" class="toast hidden"></div>
+
+<script src="parse.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
