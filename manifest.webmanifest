@@ -1,0 +1,14 @@
+{
+  "name": "声メモ",
+  "short_name": "声メモ",
+  "description": "話すだけですぐメモが取れる音声メモアプリ",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#111827",
+  "lang": "ja",
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

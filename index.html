@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111827">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="声メモ">
+  <title>声メモ</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <h1>声メモ</h1>
+    <input id="search" type="search" placeholder="メモを検索" aria-label="メモを検索">
+  </header>
+
+  <main>
+    <p id="notice" class="notice" hidden></p>
+    <ul id="list" class="list" aria-live="polite"></ul>
+    <p id="empty" class="empty">下のマイクを押して話すだけでメモになります。</p>
+  </main>
+
+  <section id="live" class="live" hidden>
+    <p id="liveText" class="live-text"><span class="final"></span><span class="interim"></span></p>
+    <p id="liveStatus" class="live-status">聞き取り中…</p>
+  </section>
+
+  <footer class="bottom">
+    <label class="toggle" title="音声ファイルも一緒に保存する">
+      <input id="keepAudio" type="checkbox"> 音声も保存
+    </label>
+    <button id="mic" class="mic" aria-label="録音開始" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11Z"/></svg>
+    </button>
+    <button id="addText" class="ghost" aria-label="テキストで追加">＋文字</button>
+  </footer>
+
+  <template id="itemTpl">
+    <li class="item">
+      <div class="meta"><time></time><span class="badge" hidden>音声</span></div>
+      <div class="text" contenteditable="true" spellcheck="false"></div>
+      <audio controls preload="none" hidden></audio>
+      <div class="actions">
+        <button class="copy">コピー</button>
+        <button class="share">共有</button>
+        <button class="del">削除</button>
+      </div>
+    </li>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
