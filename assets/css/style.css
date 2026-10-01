@@ -377,7 +377,8 @@ h1, h2, h3, h4, p, figure { margin: 0; }
 .company__table tr:first-child th, .company__table tr:first-child td { border-top: 1px solid var(--line); }
 .company__table th { width: 190px; color: var(--navy); font-weight: 700; background: var(--bg-soft); }
 .company__table a { color: var(--blue); }
-.company__map { margin-top: 32px; aspect-ratio: 16/7; background: var(--bg-soft); border-radius: var(--radius); display: grid; place-items: center; color: var(--gray); font-size: 14px; border: 1px dashed var(--line); }
+.company__map iframe { width: 100%; height: 100%; border: 0; display: block; }
+.company__map { overflow: hidden; margin-top: 32px; aspect-ratio: 16/7; background: var(--bg-soft); border-radius: var(--radius); display: block; }
 
 /* ---------- お問い合わせ ---------- */
 .contact__ways { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 44px 0 32px; }
