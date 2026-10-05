@@ -1,0 +1,16 @@
+# Netlify の設定（このフォルダをそのまま公開する）
+[build]
+  publish = "."
+
+# www付きでアクセスされたら www なしに統一（SEOのため）
+[[redirects]]
+  from = "https://www.yuect.jp/*"
+  to = "https://yuect.jp/:splat"
+  status = 301
+  force = true
+
+# 画像・CSS・JSはブラウザに1週間キャッシュさせて表示を速くする
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
