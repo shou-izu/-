@@ -22,17 +22,6 @@
   gnav.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setMenu(false)));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
 
-  // 施工実績フィルター
-  const filterBtns = document.querySelectorAll('.works__filter button');
-  const cards = document.querySelectorAll('.works__card');
-  filterBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
-      const f = btn.dataset.filter;
-      cards.forEach((c) => { c.hidden = f !== 'all' && c.dataset.cat !== f; });
-    });
-  });
-
   // 数字カウントアップ（HTMLには最終値を書いておき、検索エンジンにも正しい数字が伝わるようにする）
   const countUp = (el) => {
     const target = Number(el.dataset.count);
@@ -47,7 +36,7 @@
 
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const fadeTargets = document.querySelectorAll(
-    '.section-title, .reason__item, .service__card, .works__card, .voice__item, .flow__list li, .worries__list li, .values li'
+    '.section-title, .reason__item, .service__card, .voice__item, .flow__list li, .worries__list li'
   );
 
   if ('IntersectionObserver' in window && !reduce) {
